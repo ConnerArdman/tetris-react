@@ -1,0 +1,80 @@
+.app {
+  display: grid;
+  grid-template-areas:
+    ". title ."
+    ". game controls";
+  grid-template-columns: repeat(3, 1fr);
+}
+
+h1 {
+  text-align: center;
+  grid-area: title;
+}
+
+button {
+  padding: 4px;
+}
+
+.board {
+  border: 2px solid black;
+  user-select: none;
+  margin: auto;
+  grid-area: game;
+}
+
+.controls {
+  grid-area: controls;
+}
+
+.row {
+  display: flex;
+}
+
+.upcoming {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.cell {
+  width: 30px;
+  aspect-ratio: 1;
+  border: 1px solid black;
+}
+
+.cell.hidden {
+  visibility: hidden;
+}
+
+.cell.Empty {
+  background-color: rgb(200, 200, 200);
+}
+
+.cell.I {
+  background-color: rgb(80, 227, 230);
+}
+
+.cell.J {
+  background-color: rgb(36, 95, 223);
+}
+
+.cell.L {
+  background-color: rgb(223, 173, 36);
+}
+
+.cell.O {
+  background-color: rgb(223, 217, 36);
+}
+
+.cell.S {
+  background-color: rgb(48, 211, 56);
+}
+
+.cell.T {
+  background-color: rgb(132, 61, 198);
+}
+
+.cell.Z {
+  background-color: rgb(227, 78, 78);
+}
