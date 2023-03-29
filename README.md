@@ -1,2 +1,2 @@
 # tetris-react
-Classic Tetris Game Implemented In React
+Classic Tetris-style game implemented in React. [Live Demo](https://connerardman.github.io/tetris-react/)
