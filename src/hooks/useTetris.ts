@@ -1,6 +1,21 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Block, BlockShape, BoardShape, EmptyCell, SHAPES } from '../types';
 import { useInterval } from './useInterval';
+
+const MAX_HIGH_SCORES = 10;
+
+function saveHighScore(score: number): void {
+  const existingScores = JSON.parse(localStorage.getItem('highScores') || '[]');
+  existingScores.push(score);
+  const updatedScores = existingScores
+    .sort((a: number, b: number) => b - a)
+    .slice(0, MAX_HIGH_SCORES);
+  localStorage.setItem('highScores', JSON.stringify(updatedScores));
+}
+
+export function getHighScores(): number[] {
+  return JSON.parse(localStorage.getItem('highScores') || '[]');
+}
 import {
   useTetrisBoard,
   hasCollisions,
@@ -72,6 +87,7 @@ export function useTetris() {
     if (hasCollisions(board, SHAPES[newBlock].shape, 0, 3)) {
       setIsPlaying(false);
       setTickSpeed(null);
+      saveHighScore(score);
     } else {
       setTickSpeed(TickSpeed.Normal);
     }
@@ -216,6 +232,7 @@ export function useTetris() {
     isPlaying,
     score,
     upcomingBlocks,
+    highScores: getHighScores(),
   };
 }
 

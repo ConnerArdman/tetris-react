@@ -1,5 +1,6 @@
 import Board from './components/Board';
 import UpcomingBlocks from './components/UpcomingBlocks';
+import HighScores from './components/HighScores';
 import { useTetris } from './hooks/useTetris';
 
 function App() {
@@ -14,7 +15,10 @@ function App() {
         {isPlaying ? (
           <UpcomingBlocks upcomingBlocks={upcomingBlocks} />
         ) : (
-          <button onClick={startGame}>New Game</button>
+          <>
+            <button onClick={startGame}>New Game</button>
+            <HighScores className="mt-4" />
+          </>
         )}
       </div>
     </div>
