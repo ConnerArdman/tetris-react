@@ -46,33 +46,23 @@ export function hasCollisions(
   row: number,
   column: number
 ): boolean {
-  // Get the filled row indices
-  const filledRowIndices = currentShape
-    .map((row, index) => row.some((isSet) => isSet) ? index : -1)
-    .filter(index => index !== -1);
-
-  // Check each filled row for collisions
-  for (let i = 0; i < filledRowIndices.length; i++) {
-    const rowIndex = filledRowIndices[i];
-    const shapeRow = currentShape[rowIndex];
-
-    for (let colIndex = 0; colIndex < shapeRow.length; colIndex++) {
-      if (shapeRow[colIndex]) { // Only check filled cells
-        const boardRow = row + rowIndex;
-        const boardCol = column + colIndex;
-
+  let hasCollision = false;
+  currentShape
+    .filter((shapeRow) => shapeRow.some((isSet) => isSet))
+    .forEach((shapeRow: boolean[], rowIndex: number) => {
+      shapeRow.forEach((isSet: boolean, colIndex: number) => {
         if (
-          boardRow >= board.length ||
-          boardCol >= board[0].length ||
-          boardCol < 0 ||
-          board[boardRow][boardCol] !== EmptyCell.Empty
+          isSet &&
+          (row + rowIndex >= board.length ||
+            column + colIndex >= board[0].length ||
+            column + colIndex < 0 ||
+            board[row + rowIndex][column + colIndex] !== EmptyCell.Empty)
         ) {
-          return true; // Return immediately when collision is found
+          hasCollision = true;
         }
-      }
-    }
-  }
-  return false;
+      });
+    });
+  return hasCollision;
 }
 
 export function getRandomBlock(): Block {
