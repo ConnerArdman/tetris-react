@@ -47,21 +47,40 @@ export function hasCollisions(
   column: number
 ): boolean {
   let hasCollision = false;
-  currentShape
-    .filter((shapeRow) => shapeRow.some((isSet) => isSet))
-    .forEach((shapeRow: boolean[], rowIndex: number) => {
-      shapeRow.forEach((isSet: boolean, colIndex: number) => {
+  console.log('Starting collision check with:', {
+    startRow: row,
+    startCol: column,
+    boardLength: board.length,
+    boardWidth: board[0].length
+  });
+  
+  // Check each cell in the shape, including empty rows
+  currentShape.forEach((shapeRow: boolean[], rowIndex: number) => {
+    shapeRow.forEach((isSet: boolean, colIndex: number) => {
+      if (isSet) {
+        const actualRow = row + rowIndex;
+        const actualCol = column + colIndex;
+        console.log('Checking cell:', {
+          rowIndex,
+          colIndex,
+          actualRow,
+          actualCol,
+          isBottomCollision: actualRow >= board.length,
+          isSideCollision: actualCol >= board[0].length || actualCol < 0
+        });
+        
         if (
-          isSet &&
-          (row + rowIndex >= board.length ||
-            column + colIndex >= board[0].length ||
-            column + colIndex < 0 ||
-            board[row + rowIndex][column + colIndex] !== EmptyCell.Empty)
+          actualRow >= board.length ||
+          actualCol >= board[0].length ||
+          actualCol < 0 ||
+          board[actualRow][actualCol] !== EmptyCell.Empty
         ) {
+          console.log('Collision detected!');
           hasCollision = true;
         }
-      });
+      }
     });
+  });
   return hasCollision;
 }
 
