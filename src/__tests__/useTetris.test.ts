@@ -1,8 +1,38 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
-import { getEmptyBoard } from '../hooks/useTetrisBoard';
+import { getEmptyBoard, hasCollisions } from '../hooks/useTetrisBoard';
 import { SHAPES } from '../types';
 import { useTetris } from '../hooks/useTetris';
+
+// Mock the entire useTetrisBoard module
+vi.mock('../hooks/useTetrisBoard', async () => {
+  const actual = await vi.importActual('../hooks/useTetrisBoard');
+  return {
+    ...actual,
+    hasCollisions: vi.fn().mockReturnValue(false),
+    useTetrisBoard: () => [
+      {
+        board: Array(20).fill(Array(10).fill(0)),
+        droppingRow: 0,
+        droppingColumn: 3,
+        droppingBlock: 'I',
+        droppingShape: [[1]],
+      },
+      vi.fn(), // dispatchBoardState
+    ],
+  };
+});
+
+beforeEach(() => {
+  vi.useFakeTimers();
+  // Reset all mocks before each test
+  vi.clearAllMocks();
+});
+
+afterEach(() => {
+  vi.useRealTimers();
+  vi.resetModules();
+});
 
 describe('useTetris', () => {
   describe('game initialization', () => {
@@ -50,39 +80,38 @@ describe('useTetris', () => {
     });
 
     it('saves score to high scores on game over', () => {
-      const { result } = renderHook(() => useTetris());
-      
-      // Start game and set a score
-      act(() => {
-        result.current.startGame();
-      });
-
-      // Mock the score and trigger game over
+      // Clear localStorage and set up spy
+      localStorage.clear();
       const setScoreSpy = vi.spyOn(Storage.prototype, 'setItem');
       
-      // Simulate game over by calling commitPosition with a collision scenario
-      // Start game and set up test state
+      // Set up hasCollisions mock to trigger game over
+      const { hasCollisions } = await vi.importActual('../hooks/useTetrisBoard');
+      vi.mocked(hasCollisions).mockReturnValue(true);
+      
+      const { result } = renderHook(() => useTetris());
+      
+      // Start game and set score
       act(() => {
         result.current.startGame();
-        localStorage.clear();
+        // @ts-ignore - accessing private state for testing
+        result.current.score = 100;
       });
-
-      // Mock internal state to simulate game over condition
-      const dispatchBoardState = vi.fn();
-      const mockBoard = getEmptyBoard();
-      const mockShape = SHAPES.I.shape;
       
-      // @ts-ignore - accessing private state for testing
-      result.current.score = 100;
-      
-      // Trigger game over by simulating collision on new game
+      // Trigger game over by committing position
       act(() => {
-        result.current.startGame();
+        // @ts-ignore - accessing private method for testing
+        result.current.commitPosition();
       });
 
+      // Verify game over state
+      expect(result.current.isPlaying).toBe(false);
+      
+      // Verify high score was saved
       expect(setScoreSpy).toHaveBeenCalledWith('highScores', expect.any(String));
-      const savedScores = JSON.parse(setScoreSpy.mock.calls[0][1]);
+      const savedScores = JSON.parse(localStorage.getItem('highScores') || '[]');
       expect(savedScores).toContain(100);
+      
+      // No need to clean up module-level mock
     });
 
     it('maintains only top 10 scores in descending order', () => {
