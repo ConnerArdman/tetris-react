@@ -1,6 +1,13 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Block, BlockShape, BoardShape, EmptyCell, SHAPES } from '../types';
 import { useInterval } from './useInterval';
+import {
+  useTetrisBoard,
+  hasCollisions,
+  BOARD_HEIGHT,
+  getEmptyBoard,
+  getRandomBlock,
+} from './useTetrisBoard';
 
 const MAX_HIGH_SCORES = 10;
 
@@ -16,13 +23,6 @@ function saveHighScore(score: number): void {
 export function getHighScores(): number[] {
   return JSON.parse(localStorage.getItem('highScores') || '[]');
 }
-import {
-  useTetrisBoard,
-  hasCollisions,
-  BOARD_HEIGHT,
-  getEmptyBoard,
-  getRandomBlock,
-} from './useTetrisBoard';
 
 enum TickSpeed {
   Normal = 800,
