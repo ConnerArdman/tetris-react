@@ -53,11 +53,27 @@ body {
 .app {
   display: grid;
   grid-template-areas:
-    ". title ."
-    ". game controls";
-  grid-template-columns: repeat(3, 1fr);
-  max-width: 1200px;
+    "left title right"
+    "left game controls";
+  grid-template-columns: 1fr 400px 192px;
+  max-width: 800px;
   margin: 0 auto;
+  justify-content: center;
+  gap: 20px;
+}
+
+.controls {
+  grid-area: controls;
+  width: 192px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.board {
+  justify-self: center;
+  margin: 0;
 }
 
 h1 {
@@ -164,15 +180,25 @@ button:active {
 }
 
 .upcoming {
+  width: 160px;
   display: flex;
-  flex-direction: row-reverse;
-  justify-content: flex-end;
-  gap: 16px;
+  flex-direction: column;
+  gap: 24px;
   margin-top: 1.5rem;
   padding: 16px;
   background: rgba(255, 255, 255, 0.05);
   border-radius: 8px;
   box-shadow: 0 4px 6px var(--shadow-color);
+}
+
+.upcoming > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.upcoming .row {
+  justify-content: center;
 }
 
 .cell {
