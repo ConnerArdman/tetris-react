@@ -16,6 +16,6 @@ describe('App', () => {
     expect(screen.getByText(/Score:/)).toBeInTheDocument();
     
     // Check for game board (should be present even when not playing)
-    expect(screen.getByClassName('board')).toBeInTheDocument();
+    expect(screen.getByRole('grid')).toBeInTheDocument();
   });
 });
