@@ -22,26 +22,10 @@ describe('useTetrisBoard', () => {
       //   [true,  true,  true,  true ], // row 2 (filled row)
       //   [false, false, false, false]  // row 3
       // ]
-      // The I-block has its filled cells at row index 2
+      // After filtering empty rows, only the filled row remains and its index becomes 0
       // To test bottom collision, we need to position it so that:
-      // row + filledRowIndex = BOARD_HEIGHT
-      // So: row = BOARD_HEIGHT - filledRowIndex = BOARD_HEIGHT - 2
-      const filledRowIndex = 2;
-      const startRow = BOARD_HEIGHT - filledRowIndex;
-      
-      console.log('Board dimensions:', {
-        height: BOARD_HEIGHT,
-        width: BOARD_WIDTH,
-        actualHeight: board.length,
-        actualWidth: board[0].length
-      });
-      console.log('Shape structure:', shape);
-      console.log('Testing position:', {
-        startRow,
-        column: 3,
-        filledRowIndex,
-        expectedCollisionRow: startRow + filledRowIndex
-      });
+      // row + 0 = BOARD_HEIGHT (since the filled row becomes index 0 after filtering)
+      const startRow = BOARD_HEIGHT;
       
       const collision = hasCollisions(board, shape, startRow, 3);
       expect(collision).toBe(true);
