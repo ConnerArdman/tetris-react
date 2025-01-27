@@ -9,6 +9,26 @@ import {
   getRandomBlock,
 } from './useTetrisBoard';
 
+const MAX_HIGH_SCORES = 10;
+
+export function saveHighScore(score: number): void {
+  const existingScores = JSON.parse(localStorage.getItem('highScores') || '[]');
+  existingScores.push(score);
+  const updatedScores = existingScores
+    .sort((a: number, b: number) => b - a)
+    .slice(0, MAX_HIGH_SCORES);
+  localStorage.setItem('highScores', JSON.stringify(updatedScores));
+}
+
+export function getHighScores(): number[] {
+  try {
+    const scores = JSON.parse(localStorage.getItem('highScores') || '[]');
+    return Array.isArray(scores) ? scores.sort((a, b) => b - a).slice(0, MAX_HIGH_SCORES) : [];
+  } catch {
+    return [];
+  }
+}
+
 enum TickSpeed {
   Normal = 800,
   Sliding = 100,
@@ -70,6 +90,7 @@ export function useTetris() {
     newUpcomingBlocks.unshift(getRandomBlock());
 
     if (hasCollisions(board, SHAPES[newBlock].shape, 0, 3)) {
+      saveHighScore(score);
       setIsPlaying(false);
       setTickSpeed(null);
     } else {
@@ -91,6 +112,7 @@ export function useTetris() {
     droppingRow,
     droppingShape,
     upcomingBlocks,
+    score,
   ]);
 
   const gameTick = useCallback(() => {
@@ -216,6 +238,7 @@ export function useTetris() {
     isPlaying,
     score,
     upcomingBlocks,
+    highScores: getHighScores(),
   };
 }
 

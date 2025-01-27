@@ -6,7 +6,7 @@
 }
 
 body {
-  background-color: var(--background-color);
+  background-color: #1a1a1a;
   font-family: system-ui, -apple-system, sans-serif;
   margin: 0;
   padding: 20px;
@@ -43,13 +43,13 @@ h1 {
   grid-area: title;
   font-size: 2.5rem;
   margin: 1rem 0;
-  color: var(--border-color);
+  color: white;
 }
 
 h2 {
   font-size: 1.5rem;
   margin: 1rem 0;
-  color: var(--border-color);
+  color: white;
 }
 
 button {
@@ -226,4 +226,41 @@ button:active {
   background-color: #dc2626;
   box-shadow: 0 0 12px rgba(220, 38, 38, 0.3),
               inset 0 -2px 0 rgba(0, 0, 0, 0.2);
+}
+
+.high-scores {
+  width: 160px;
+  margin-top: 24px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  box-shadow: 0 4px 6px var(--shadow-color);
+  color: white;
+}
+
+.high-scores h2 {
+  color: white;
+  margin-top: 0;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.high-scores p {
+  color: white;
+  text-align: center;
+  opacity: 0.7;
+}
+
+.high-scores-list {
+  list-style-position: inside;
+  padding: 0;
+  margin: 0;
+}
+
+.high-score-item {
+  padding: 8px;
+  margin: 4px 0;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 4px;
+  text-align: center;
 }

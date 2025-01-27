@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import App from '../App';
 
 describe('App', () => {
@@ -17,5 +17,32 @@ describe('App', () => {
     
     // Check for game board (should be present even when not playing)
     expect(screen.getByRole('grid')).toBeInTheDocument();
+  });
+
+  describe('high scores integration', () => {
+    beforeEach(() => {
+      localStorage.clear();
+    });
+
+    afterEach(() => {
+      localStorage.clear();
+    });
+
+    it('shows high scores when game is not being played', () => {
+      const scores = [300, 200, 100];
+      localStorage.setItem('highScores', JSON.stringify(scores));
+      
+      render(<App />);
+      
+      expect(screen.getByText('High Scores')).toBeInTheDocument();
+      expect(screen.getByText('300')).toBeInTheDocument();
+      expect(screen.getByText('200')).toBeInTheDocument();
+      expect(screen.getByText('100')).toBeInTheDocument();
+    });
+
+    it('shows "No high scores yet!" when there are no scores', () => {
+      render(<App />);
+      expect(screen.getByText('No high scores yet!')).toBeInTheDocument();
+    });
   });
 });
