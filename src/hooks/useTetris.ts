@@ -11,7 +11,7 @@ import {
 
 const MAX_HIGH_SCORES = 10;
 
-function saveHighScore(score: number): void {
+export function saveHighScore(score: number): void {
   const existingScores = JSON.parse(localStorage.getItem('highScores') || '[]');
   existingScores.push(score);
   const updatedScores = existingScores
@@ -112,6 +112,7 @@ export function useTetris() {
     droppingRow,
     droppingShape,
     upcomingBlocks,
+    score,
   ]);
 
   const gameTick = useCallback(() => {

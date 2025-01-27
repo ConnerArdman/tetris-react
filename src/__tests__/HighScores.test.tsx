@@ -43,10 +43,4 @@ describe('HighScores component', () => {
     expect(listItems).toHaveLength(10);
     expect(listItems[0]).toHaveTextContent('1500'); // Highest score
   });
-
-  it('applies className prop correctly', () => {
-    render(<HighScores className="test-class" />);
-    expect(screen.getByRole('heading', { name: /high scores/i }).parentElement)
-      .toHaveClass('high-scores', 'test-class');
-  });
 });

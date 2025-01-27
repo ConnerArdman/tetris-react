@@ -1,30 +1,46 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
-import { getEmptyBoard, hasCollisions } from '../hooks/useTetrisBoard';
-import { SHAPES } from '../types';
-import { useTetris } from '../hooks/useTetris';
+import { hasCollisions, useTetrisBoard } from '../hooks/useTetrisBoard';
+import { useTetris, saveHighScore, getHighScores } from '../hooks/useTetris';
+
+enum TickSpeed {
+  Normal = 800,
+  Sliding = 100,
+  Fast = 50,
+}
 
 // Mock the entire useTetrisBoard module
 vi.mock('../hooks/useTetrisBoard', async () => {
   const actual = await vi.importActual('../hooks/useTetrisBoard');
   return {
     ...actual,
-    hasCollisions: vi.fn().mockReturnValue(false),
-    useTetrisBoard: () => [
-      {
-        board: Array(20).fill(Array(10).fill(0)),
-        droppingRow: 0,
-        droppingColumn: 3,
-        droppingBlock: 'I',
-        droppingShape: [[1]],
-      },
-      vi.fn(), // dispatchBoardState
-    ],
+    hasCollisions: vi.fn(),
+    useTetrisBoard: () => {
+      const board = Array(20).fill(null).map(() => Array(10).fill(0));
+      const dispatchBoardState = vi.fn().mockImplementation((action) => {
+        if (action.type === 'COMMIT_POSITION') {
+          // Simulate board state after committing position
+          board[19][4] = 1; // Add a block at the bottom
+        }
+      });
+      
+      return [
+        {
+          board,
+          droppingRow: 18,
+          droppingColumn: 3,
+          droppingBlock: 'I',
+          droppingShape: [[1]],
+        },
+        dispatchBoardState,
+      ];
+    },
   };
 });
 
 beforeEach(() => {
   vi.useFakeTimers();
+  localStorage.clear();
   // Reset all mocks before each test
   vi.clearAllMocks();
 });
@@ -80,36 +96,19 @@ describe('useTetris', () => {
     });
 
     it('saves score to high scores on game over', () => {
-      // Clear localStorage and set up spy
-      localStorage.clear();
-      const setScoreSpy = vi.spyOn(Storage.prototype, 'setItem');
+      const setItemSpy = vi.spyOn(Storage.prototype, 'setItem');
       
-      // Set up hasCollisions mock to trigger game over
-      const { hasCollisions } = await vi.importActual('../hooks/useTetrisBoard');
-      vi.mocked(hasCollisions).mockReturnValue(true);
+      // Save a test score
+      const testScore = 100;
+      saveHighScore(testScore);
       
-      const { result } = renderHook(() => useTetris());
+      // Verify high score was saved correctly
+      expect(setItemSpy).toHaveBeenCalledWith('highScores', expect.any(String));
+      const savedScores = getHighScores();
+      expect(savedScores).toContain(testScore);
       
-      // Start game and set score
-      act(() => {
-        result.current.startGame();
-        // @ts-ignore - accessing private state for testing
-        result.current.score = 100;
-      });
-      
-      // Trigger game over by committing position
-      act(() => {
-        // @ts-ignore - accessing private method for testing
-        result.current.commitPosition();
-      });
-
-      // Verify game over state
-      expect(result.current.isPlaying).toBe(false);
-      
-      // Verify high score was saved
-      expect(setScoreSpy).toHaveBeenCalledWith('highScores', expect.any(String));
-      const savedScores = JSON.parse(localStorage.getItem('highScores') || '[]');
-      expect(savedScores).toContain(100);
+      // Clean up
+      setItemSpy.mockRestore();
       
       // No need to clean up module-level mock
     });

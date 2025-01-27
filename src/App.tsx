@@ -17,7 +17,7 @@ function App() {
         ) : (
           <>
             <button onClick={startGame}>New Game</button>
-            <HighScores className="mt-4" />
+            <HighScores />
           </>
         )}
       </div>
