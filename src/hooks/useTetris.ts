@@ -21,7 +21,12 @@ function saveHighScore(score: number): void {
 }
 
 export function getHighScores(): number[] {
-  return JSON.parse(localStorage.getItem('highScores') || '[]');
+  try {
+    const scores = JSON.parse(localStorage.getItem('highScores') || '[]');
+    return Array.isArray(scores) ? scores.sort((a, b) => b - a).slice(0, MAX_HIGH_SCORES) : [];
+  } catch {
+    return [];
+  }
 }
 
 enum TickSpeed {
@@ -85,9 +90,9 @@ export function useTetris() {
     newUpcomingBlocks.unshift(getRandomBlock());
 
     if (hasCollisions(board, SHAPES[newBlock].shape, 0, 3)) {
+      saveHighScore(score);
       setIsPlaying(false);
       setTickSpeed(null);
-      saveHighScore(score);
     } else {
       setTickSpeed(TickSpeed.Normal);
     }

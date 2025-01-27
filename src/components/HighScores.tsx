@@ -6,7 +6,7 @@ interface HighScoresProps {
 }
 
 const HighScores: React.FC<HighScoresProps> = ({ className = '' }) => {
-  const highScores = getHighScores();
+  const highScores = getHighScores().slice(0, 10);
   
   if (highScores.length === 0) {
     return (

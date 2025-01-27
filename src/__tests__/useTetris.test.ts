@@ -1,5 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
+import { getEmptyBoard } from '../hooks/useTetrisBoard';
+import { SHAPES } from '../types';
 import { useTetris } from '../hooks/useTetris';
 
 describe('useTetris', () => {
@@ -59,10 +61,23 @@ describe('useTetris', () => {
       const setScoreSpy = vi.spyOn(Storage.prototype, 'setItem');
       
       // Simulate game over by calling commitPosition with a collision scenario
+      // Start game and set up test state
       act(() => {
-        // @ts-ignore - accessing private state for testing
-        result.current.score = 100;
-        result.current.commitPosition();
+        result.current.startGame();
+        localStorage.clear();
+      });
+
+      // Mock internal state to simulate game over condition
+      const dispatchBoardState = vi.fn();
+      const mockBoard = getEmptyBoard();
+      const mockShape = SHAPES.I.shape;
+      
+      // @ts-ignore - accessing private state for testing
+      result.current.score = 100;
+      
+      // Trigger game over by simulating collision on new game
+      act(() => {
+        result.current.startGame();
       });
 
       expect(setScoreSpy).toHaveBeenCalledWith('highScores', expect.any(String));
