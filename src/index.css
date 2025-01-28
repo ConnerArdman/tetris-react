@@ -270,3 +270,32 @@ button:active {
   border-radius: 4px;
   text-align: center;
 }
+
+@keyframes particle-explode {
+  0% {
+    transform: scale(1) translate(0, 0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0) translate(var(--tx, 30px), var(--ty, -30px));
+    opacity: 0;
+  }
+}
+
+.particle-effect-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 100;
+}
+
+.particle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 2px;
+  animation: particle-explode 0.5s ease-out forwards;
+}

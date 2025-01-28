@@ -41,6 +41,7 @@ export function useTetris() {
   const [isCommitting, setIsCommitting] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [tickSpeed, setTickSpeed] = useState<TickSpeed | null>(null);
+  const [clearedRows, setClearedRows] = useState<Array<{ rowIndex: number; blocks: (Block | EmptyCell)[] }>>([]);
 
   const [
     { board, droppingRow, droppingColumn, droppingBlock, droppingShape },
@@ -78,11 +79,20 @@ export function useTetris() {
     );
 
     let numCleared = 0;
+    let newlyClearedRows: Array<{ rowIndex: number; blocks: Block[] }> = [];
     for (let row = BOARD_HEIGHT - 1; row >= 0; row--) {
       if (newBoard[row].every((entry) => entry !== EmptyCell.Empty)) {
         numCleared++;
+        newlyClearedRows.push({ rowIndex: row, blocks: [...newBoard[row]] });
         newBoard.splice(row, 1);
       }
+    }
+    
+    if (newlyClearedRows.length > 0) {
+      setClearedRows(newlyClearedRows);
+      setTimeout(() => {
+        setClearedRows([]);
+      }, 500);
     }
 
     const newUpcomingBlocks = structuredClone(upcomingBlocks) as Block[];
@@ -239,6 +249,7 @@ export function useTetris() {
     score,
     upcomingBlocks,
     highScores: getHighScores(),
+    clearedRows,
   };
 }
 
