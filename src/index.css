@@ -1,3 +1,9 @@
+/* 
+  Note some of these styles differ from the original Tetris video,
+  because they were updated by Devin AI as part of another video.
+  If you would like to work from the same version as seen in the
+  original Tetris video, you can find it in the git history.
+*/
 :root {
   --primary-color: #2563eb;
   --border-color: #1f2937;

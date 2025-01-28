@@ -150,7 +150,7 @@ export function useTetris() {
 
     let isPressingLeft = false;
     let isPressingRight = false;
-    let moveIntervalID: number | undefined;
+    let moveIntervalID: ReturnType<typeof setInterval> | undefined;
 
     const updateMovementInterval = () => {
       clearInterval(moveIntervalID);
