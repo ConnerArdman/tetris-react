@@ -6,7 +6,7 @@ interface Props {
   blocks: (Block | EmptyCell)[];
 }
 
-export default function ParticleEffect({ rowIndex, blocks }: Props) {
+function ParticleEffect({ rowIndex, blocks }: Props) {
   const [particles, setParticles] = useState<Array<{
     id: number;
     x: number;
@@ -18,13 +18,13 @@ export default function ParticleEffect({ rowIndex, blocks }: Props) {
 
   useEffect(() => {
     const newParticles = blocks.flatMap((block, colIndex) => 
-      Array.from({ length: 3 }).map((_, i) => ({
+      block === EmptyCell.Empty ? [] : Array.from({ length: 3 }).map((_, i) => ({
         id: colIndex * 3 + i,
         x: colIndex * 32,
         y: rowIndex * 32,
         tx: (Math.random() - 0.5) * 60,
         ty: (Math.random() - 0.5) * 60,
-        block
+        block: block as Block
       }))
     );
     setParticles(newParticles);

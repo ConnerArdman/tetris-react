@@ -79,7 +79,7 @@ export function useTetris() {
     );
 
     let numCleared = 0;
-    let newlyClearedRows: Array<{ rowIndex: number; blocks: Block[] }> = [];
+    let newlyClearedRows: Array<{ rowIndex: number; blocks: (Block | EmptyCell)[] }> = [];
     for (let row = BOARD_HEIGHT - 1; row >= 0; row--) {
       if (newBoard[row].every((entry) => entry !== EmptyCell.Empty)) {
         numCleared++;

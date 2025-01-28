@@ -4,7 +4,7 @@ import { BoardShape, Block } from '../types';
 
 interface Props {
   currentBoard: BoardShape;
-  clearedRows?: { rowIndex: number; blocks: Block[] }[];
+  clearedRows?: { rowIndex: number; blocks: (Block | EmptyCell)[] }[];
 }
 
 function Board({ currentBoard, clearedRows = [] }: Props) {
