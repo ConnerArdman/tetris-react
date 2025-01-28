@@ -1,6 +1,6 @@
 import Cell from './Cell';
 import ParticleEffect from './ParticleEffect';
-import { BoardShape, Block } from '../types';
+import { BoardShape, Block, EmptyCell } from '../types';
 
 interface Props {
   currentBoard: BoardShape;
