@@ -4,6 +4,13 @@ import { Block, BlockShape, BoardShape, EmptyCell, SHAPES } from '../types';
 export const BOARD_WIDTH = 10;
 export const BOARD_HEIGHT = 20;
 
+export function debugFillRow(board: BoardShape): BoardShape {
+  const newBoard = structuredClone(board);
+  const bottomRow = newBoard.length - 1;
+  newBoard[bottomRow] = Array(BOARD_WIDTH).fill(Block.I);
+  return newBoard;
+}
+
 type BoardState = {
   board: BoardShape;
   droppingRow: number;

@@ -20,13 +20,16 @@ function ParticleEffect({ rowIndex, blocks }: Props) {
     const newParticles = blocks.flatMap((block, colIndex) => 
       block === EmptyCell.Empty ? [] : Array.from({ length: 3 }).map((_, i) => ({
         id: colIndex * 3 + i,
-        x: colIndex * 32,
-        y: rowIndex * 32,
-        tx: (Math.random() - 0.5) * 60,
-        ty: (Math.random() - 0.5) * 60,
+        x: colIndex * 32 + 16,  // Center of the cell
+        y: rowIndex * 32 + 16, // Center of the cell
+        tx: (Math.random() - 0.5) * 100, // Wider spread
+        ty: (Math.random() - 0.5) * 100, // Wider spread
         block: block as Block
       }))
     );
+    console.log('Generated particles:', newParticles);
+    console.log('Row index:', rowIndex);
+    console.log('Blocks:', blocks);
     setParticles(newParticles);
 
     const timer = setTimeout(() => {
@@ -37,7 +40,7 @@ function ParticleEffect({ rowIndex, blocks }: Props) {
   }, [blocks, rowIndex]);
 
   return (
-    <div className="particle-effect-container">
+    <div className="particle-effect-container" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>
       {particles.map((particle) => (
         <div
           key={particle.id}
@@ -46,8 +49,10 @@ function ParticleEffect({ rowIndex, blocks }: Props) {
             left: particle.x + 'px',
             top: particle.y + 'px',
             ['--tx' as string]: particle.tx + 'px',
-            ['--ty' as string]: particle.ty + 'px'
+            ['--ty' as string]: particle.ty + 'px',
+            opacity: 1
           }}
+          data-block-type={particle.block}
         />
       ))}
     </div>

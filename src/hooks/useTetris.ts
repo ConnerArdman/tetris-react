@@ -250,6 +250,7 @@ export function useTetris() {
     upcomingBlocks,
     highScores: getHighScores(),
     clearedRows,
+    dispatchBoard: dispatchBoardState,
   };
 }
 

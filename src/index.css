@@ -273,13 +273,32 @@ button:active {
 
 @keyframes particle-explode {
   0% {
-    transform: scale(1) translate(0, 0);
+    transform: scale(1.5) translate(0, 0);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1) translate(calc(var(--tx) * 0.5), calc(var(--ty) * 0.5));
     opacity: 1;
   }
   100% {
-    transform: scale(0) translate(var(--tx, 30px), var(--ty, -30px));
+    transform: scale(0) translate(var(--tx), var(--ty));
     opacity: 0;
   }
+}
+
+.board {
+  position: relative;
+  overflow: visible;
+}
+
+.particle-effects-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
 }
 
 .particle-effect-container {
@@ -289,13 +308,48 @@ button:active {
   width: 100%;
   height: 100%;
   pointer-events: none;
-  z-index: 100;
 }
 
 .particle {
   position: absolute;
-  width: 6px;
-  height: 6px;
-  border-radius: 2px;
-  animation: particle-explode 0.5s ease-out forwards;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  animation: particle-explode 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  transform-origin: center;
+}
+
+.particle[data-block-type="I"] {
+  background-color: #31C7EF;
+  box-shadow: 0 0 8px #31C7EF;
+}
+
+.particle[data-block-type="O"] {
+  background-color: #F7D308;
+  box-shadow: 0 0 8px #F7D308;
+}
+
+.particle[data-block-type="T"] {
+  background-color: #AD4D9C;
+  box-shadow: 0 0 8px #AD4D9C;
+}
+
+.particle[data-block-type="S"] {
+  background-color: #42B642;
+  box-shadow: 0 0 8px #42B642;
+}
+
+.particle[data-block-type="Z"] {
+  background-color: #EF2029;
+  box-shadow: 0 0 8px #EF2029;
+}
+
+.particle[data-block-type="J"] {
+  background-color: #5A65AD;
+  box-shadow: 0 0 8px #5A65AD;
+}
+
+.particle[data-block-type="L"] {
+  background-color: #EF7921;
+  box-shadow: 0 0 8px #EF7921;
 }
